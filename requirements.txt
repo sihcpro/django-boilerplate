@@ -1,0 +1,12 @@
+django==3.2
+django-cors-headers
+# django-rest-swagger -> drf-yasg
+
+djangorestframework==3.13.1
+djangorestframework-simplejwt
+
+dynamic-rest==2.1.2
+
+psycopg2-binary
+
+drf-yasg

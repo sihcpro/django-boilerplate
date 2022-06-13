@@ -1,0 +1,43 @@
+version: "3.7"
+
+services:
+    postgres:
+        container_name: dj-postgres
+        image: postgres
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U admin -d dj-boilerplate"]
+            interval: 10s
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin123
+            POSTGRES_DB: dj-boilerplate
+            PGDATA: /data/postgres
+        volumes:
+             - ./data/postgressdb/postgres:/data/postgres
+             - ./data/postgressdb/init_db:/docker-entrypoint-initdb.d/
+        ports:
+            - 8023:5432
+        networks:
+            - backend
+        restart: always
+    backend:
+        image: "sihc/dj-boilerplate:${IMAGE_TAG:-latest}"
+        container_name: dj-backend
+        build:
+            context: ../
+            dockerfile: docker/Dockerfile
+        environment:
+            - DJANGO_SETTINGS_MODULE=app.settings.local
+            - DB_USER=admin
+            - DB_HOST=postgres
+            - DB_PORT=5432
+        depends_on:
+            postgres:
+                condition: service_healthy
+        ports:
+            - 8088:8000
+        networks:
+            - backend
+        restart: unless-stopped
+networks:
+    backend:
