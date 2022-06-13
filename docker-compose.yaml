@@ -13,8 +13,8 @@ services:
             POSTGRES_DB: dj-boilerplate
             PGDATA: /data/postgres
         volumes:
-             - ./data/postgressdb/postgres:/data/postgres
-             - ./data/postgressdb/init_db:/docker-entrypoint-initdb.d/
+             - ./docker/data/postgressdb/postgres:/data/postgres
+             - ./docker/data/postgressdb/init_db:/docker-entrypoint-initdb.d/
         ports:
             - 8023:5432
         networks:
@@ -24,7 +24,7 @@ services:
         image: "sihc/dj-boilerplate:${IMAGE_TAG:-latest}"
         container_name: dj-backend
         build:
-            context: ../
+            context: "."
             dockerfile: docker/Dockerfile
         environment:
             - DJANGO_SETTINGS_MODULE=app.settings.local
